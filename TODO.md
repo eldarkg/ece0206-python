@@ -1,0 +1,4 @@
+- [X] implement get information functions
+- [X] implement the ring SI buffer
+- [ ] open device by serial number (support multi devices)
+- [ ] implement One Cmd API
