@@ -340,7 +340,7 @@ class Device:
         if dim not in range(WRITE_ARRAY_RANGE[0], WRITE_ARRAY_RANGE[1]+1):
             raise ECE0206Exception('Attempt to write long array.')
 
-    def _write_to_ep_cmd_so(self, data:bytearray) -> None:
+    def _write_to_ep_cmd(self, data:bytearray) -> None:
         #TODO check len <= 512 bytes
         sent = 0
         while sent < len(data):
@@ -353,7 +353,7 @@ class Device:
         data.insert(0, addr)   # AR
         data.insert(1, 0x80)   # CR.Blk
 
-        self._write_to_ep_cmd_so(data)
+        self._write_to_ep_cmd(data)
 
     def write_array(self, addr:ADDR_RANGE,
                     params_array:'list of ints[in WRITE_ARRAY_RANGE]') -> None:
@@ -450,7 +450,7 @@ class Device:
         data.insert(0, 0x00)      # AR
         data.insert(1, 0x20)      # CR.Com_buf(register access)
 
-        self._write_to_ep_cmd_so(data)
+        self._write_to_ep_cmd(data)
 
     def so_stop(self) -> None:
         '''
@@ -471,7 +471,7 @@ class Device:
         data.insert(0, 0x00)    # AR
         data.insert(1, 0x20)    # CR.Com_buf(register access)
 
-        self._write_to_ep_cmd_so(data)
+        self._write_to_ep_cmd(data)
 
     def so_state(self) -> SOState:
         '''
@@ -483,7 +483,7 @@ class Device:
         data.append(0x00)       # AR
         data.append(0x60)       # CR.Wr_Rd(read) | CR.Com_buf(register access)
 
-        self._write_to_ep_cmd_so(data)
+        self._write_to_ep_cmd(data)
         osr = self._read_from_ep_ans(REGISTER_LEN)
 
         sostate = self._unpack_osr(osr)
@@ -502,7 +502,7 @@ class Device:
         data.append(comm)   # CR
         data.extend(self._param_to_bytes(param))
 
-        self._write_to_ep_cmd_so(data)
+        self._write_to_ep_cmd(data)
 
     def read_param(self, addr:ADDR_RANGE) -> int:
         '''
@@ -515,7 +515,7 @@ class Device:
         data.append(addr)   # AR
         data.append(0x40)   # CR.Wr_Rd(read)
 
-        self._write_to_ep_cmd_so(data)
+        self._write_to_ep_cmd(data)
         param = self._read_from_ep_ans(PARAM_LEN)
 
         return self._bytes_to_param(param)
@@ -550,7 +550,7 @@ class Device:
 
         data.extend(self._isr)
 
-        self._write_to_ep_cmd_so(data)
+        self._write_to_ep_cmd(data)
 
     def si_start(self, ch_num:SI_CH_RANGE, freq:SI_FREQ, mode:MODE=MODE.WORK,
                  parity:PARITY=PARITY.SKIP) -> None:
