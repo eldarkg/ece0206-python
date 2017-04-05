@@ -342,10 +342,9 @@ class Device:
 
     def _write_to_ep_cmd_so(self, data:bytearray) -> None:
         #TODO check len <= 512 bytes
-        need_send = len(data)
-        while need_send:
-            sent = self._usb_devh.bulkWrite(EP.CMD_SO, data)
-            need_send -= sent
+        sent = 0
+        while sent < len(data):
+            sent += self._usb_devh.bulkWrite(EP.CMD_SO, data[sent:])
 
     def _read_from_ep_ans(self, length) -> bytearray:
         return self._usb_devh.bulkRead(EP.ANS, length)
