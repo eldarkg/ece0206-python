@@ -25,6 +25,8 @@ import usb1 as usb
 
 from enum import IntEnum, unique
 
+import log
+
 
 DEV_OLD_VID = 0x04B4
 DEV_OLD_PID = 0x8613
@@ -292,6 +294,9 @@ class Device:
         Find and lock usb device.
         On errors raise exceptions.
         '''
+        self._log = log.Logger()
+        self._log.open('ece0206-log.txt')
+
         self._init_usb_device()
         self._init_driver_data()
         self._start_si_receive()
@@ -314,6 +319,11 @@ class Device:
 
         if self._usb_ctx:
             self._usb_ctx.close()
+
+        self._log.close()
+
+    def set_debug(self, level) -> None:
+        self._debug = level
 
     ''' Output channel '''
 
@@ -345,6 +355,9 @@ class Device:
         sent = 0
         while sent < len(data):
             sent += self._usb_devh.bulkWrite(EP.CMD_SO, data[sent:])
+
+        if self._debug:
+            self._log.ep_cmd(data)
 
     def _read_from_ep_ans(self, length) -> bytearray:
         return self._usb_devh.bulkRead(EP.ANS, length)
@@ -485,6 +498,8 @@ class Device:
 
         self._write_to_ep_cmd(data)
         osr = self._read_from_ep_ans(REGISTER_LEN)
+        if self._debug:
+            self._log.ep_ans_osr(osr)
 
         sostate = self._unpack_osr(osr)
 
@@ -517,6 +532,8 @@ class Device:
 
         self._write_to_ep_cmd(data)
         param = self._read_from_ep_ans(PARAM_LEN)
+        if self._debug:
+            self._log.ep_ans_param(addr, param)
 
         return self._bytes_to_param(param)
 
