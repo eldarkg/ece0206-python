@@ -234,6 +234,9 @@ class Device:
         self._buf_ap[ch-1][addr] = iparam
         self._push_to_buf_cc(ch, iparam)
 
+        if self._debug:
+            self._log.ep_si_param(addr, iparam)
+
     def _process_si_receive(self, transfer) -> bool:
         def get_type_of_word(word) -> WORD_TYPE:
             if word[1] == TIMER_ID:

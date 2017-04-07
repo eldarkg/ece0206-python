@@ -15,6 +15,8 @@
 
 import time
 
+from __init__ import *
+
 
 class Logger:
     def open(self, name):
@@ -96,3 +98,8 @@ class Logger:
                 i += wrdlen
 
             self._write(smsg + 'END')
+
+    def ep_si_param(self, addr, iparam):
+        self._write(str.format('IN SI PAR ' +
+                               self._param_str(addr, iparam.param) +
+                               ' {0} {1}', iparam.timer, iparam.error))
