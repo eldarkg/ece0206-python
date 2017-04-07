@@ -21,12 +21,14 @@ from __init__ import *
 class Logger:
     def open(self, name):
         self._log = open(name, 'a')
+        self._start_time = time.perf_counter()
 
     def close(self):
         self._log.close()
 
     def _write(self, msg):
-        msg = str.format('{0:.3f} ' + msg + '\n', time.perf_counter())
+        msg = str.format('{0:.3f} ' + msg + '\n',
+                         time.perf_counter() - self._start_time)
         self._log.write(msg)
 
     def _param_str(self, addr, param):
