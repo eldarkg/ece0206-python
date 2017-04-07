@@ -200,7 +200,7 @@ class Device:
 
     def _process_tlabel_word(self, wrd:bytes) -> None:
         self._timer = 0xFF000000
-        self._timer = wrd[2]
+        self._timer |= wrd[2]
         self._timer |= wrd[3] << 8
         self._timer |= wrd[0] << 16
         self._timer &= 0xFFFFFF
