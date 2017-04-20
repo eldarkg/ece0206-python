@@ -18,16 +18,17 @@ Test common functions
 '''
 
 import time
-import __init__ as ece0206
+
+from ..device import *
 
 
-RAM_LEN             = ece0206.ADDR_RANGE[1] + 1
+RAM_LEN             = ADDR_RANGE[1] + 1
 
 _BUF_WRITE_BLOCK    = 64
 _WRITE_TIMEOUT      = 0.3 # s
 
 
-def buf256x32_write(dev:ece0206.Device, params):
+def buf256x32_write(dev:Device, params):
     print('BUF256x32_write')
     for i in range(4):
         buf_i = i * _BUF_WRITE_BLOCK
@@ -36,16 +37,16 @@ def buf256x32_write(dev:ece0206.Device, params):
 
 
 def print_frequency(si_freq, so_freq):
-    if si_freq == ece0206.SI_FREQ.F11TO14_5KHZ:
+    if si_freq == SI_FREQ.F11TO14_5KHZ:
         print('      frequency: si = Slow', end='')
     else:
         print('      frequency: si = Fast', end='')
 
-    if so_freq == ece0206.SO_FREQ.F12_5KHZ:
+    if so_freq == SO_FREQ.F12_5KHZ:
         print(' so = 12,5KHz')
-    elif so_freq == ece0206.SO_FREQ.F50KHZ:
+    elif so_freq == SO_FREQ.F50KHZ:
         print(' so = 50KHz')
-    elif so_freq == ece0206.SO_FREQ.F100KHZ:
+    elif so_freq == SO_FREQ.F100KHZ:
         print(' so = 100KHz')
 
 
@@ -54,7 +55,7 @@ def test_input_params(dev, si_channel, so_array_dim_int, params):
 
     for i in range(so_array_dim_int):
         if ((params[i] != (input_params[i].param & 0x7FFFFFFF) or
-            input_params[i].error != ece0206.ERROR_CODE.NO) and
+            input_params[i].error != ERROR_CODE.NO) and
             not input_params[i].polling_error):
             print('ERROR: parameter#: 0x{0:x}  right value: 0x{1:x}  '\
                   'value: 0x{2:x}  error: 0x{3:02x}  '\
@@ -86,18 +87,18 @@ def test_period(dev, si_channel, so_array_dim_int, min_period, max_period):
 
 
 def get_si_frequency(so_freq):
-    if so_freq == ece0206.SO_FREQ.F12_5KHZ:
-        si_freq = ece0206.SI_FREQ.F11TO14_5KHZ
+    if so_freq == SO_FREQ.F12_5KHZ:
+        si_freq = SI_FREQ.F11TO14_5KHZ
     else:
-        si_freq = ece0206.SI_FREQ.F36TO100KHZ
+        si_freq = SI_FREQ.F36TO100KHZ
 
     return si_freq
 
 
 def print_si_mode(si_mode):
-    if si_mode == ece0206.MODE.TEST:
+    if si_mode == MODE.TEST:
         print('   Self-checking mode')
-    elif si_mode == ece0206.MODE.WORK:
+    elif si_mode == MODE.WORK:
         print('   Operating mode (with stub)')
 
 

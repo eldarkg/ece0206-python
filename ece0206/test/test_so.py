@@ -18,16 +18,16 @@ Test output channel (SO)
 '''
 
 import time
-import __init__ as ece0206
 
-from test.common import *
+from ..device import *
+from .common import *
 
 
 _SI_CHANNEL  = 1
 
 
 def _get_period(so_freq):
-    if so_freq == ece0206.SO_FREQ.F12_5KHZ:
+    if so_freq == SO_FREQ.F12_5KHZ:
         min_period = 2800
         max_period = 2960
     else:
@@ -44,7 +44,7 @@ def _get_so_array_dim_int(so_array_dim):
         return so_array_dim
 
 
-def test_so(dev:ece0206.Device) -> bool:
+def test_so(dev:Device) -> bool:
     dev.set_long_mode()
 
     params = list()
@@ -53,18 +53,18 @@ def test_so(dev:ece0206.Device) -> bool:
 
     buf256x32_write(dev, params)
 
-    si_parity = ece0206.PARITY.ODD
-    so_parity = ece0206.PARITY.ODD
-    so_err_en = ece0206.ERR_EN.OUT_32BIT
+    si_parity = PARITY.ODD
+    so_parity = PARITY.ODD
+    so_err_en = ERR_EN.OUT_32BIT
 
     print(' SINGLE OUTPUT:')
     so_array_num = 1
     so_delay = 0
 
-    for si_mode in list(ece0206.MODE):
+    for si_mode in list(MODE):
         print_si_mode(si_mode)
 
-        for so_freq in list(ece0206.SO_FREQ):
+        for so_freq in list(SO_FREQ):
             si_freq = get_si_frequency(so_freq)
             print_frequency(si_freq, so_freq)
 
@@ -99,10 +99,10 @@ def test_so(dev:ece0206.Device) -> bool:
         print(' MULTIPLE OUTPUT:  SO Array Number = {0:3d}'\
               .format(so_array_num))
 
-        for si_mode in list(ece0206.MODE):
+        for si_mode in list(MODE):
             print_si_mode(si_mode)
 
-            for so_freq in list(ece0206.SO_FREQ):
+            for so_freq in list(SO_FREQ):
                 si_freq = get_si_frequency(so_freq)
                 print_frequency(si_freq, so_freq)
 

@@ -15,16 +15,14 @@
 
 ''' Main entry point '''
 
-
-import __init__ as ece0206
-
-from test.test_ram import *
-from test.test_so import *
-from test.test_si import *
+from .device import *
+from .test.test_ram import *
+from .test.test_so import *
+from .test.test_si import *
 
 
 if __name__ == '__main__':
-    dev = ece0206.Device()
+    dev = Device()
     dev.open()
 
     print('serial #', dev.get_serial_number())

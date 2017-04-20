@@ -15,8 +15,6 @@
 
 import time
 
-from __init__ import *
-
 
 class Logger:
     def open(self, name):

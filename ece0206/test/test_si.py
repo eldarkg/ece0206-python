@@ -18,38 +18,38 @@ Test input channels (SI)
 '''
 
 import time
-import __init__ as ece0206
 
-from test.common import *
+from ..device import *
+from .common import *
 
 
-def test_si(dev:ece0206.Device) -> bool:
+def test_si(dev:Device) -> bool:
     params = list()
     for i in range(RAM_LEN):
         params.append(get_test_param(i))
 
     buf256x32_write(dev, params)
 
-    so_err_en = ece0206.ERR_EN.OUT_32BIT
-    so_parity = ece0206.PARITY.ODD
+    so_err_en = ERR_EN.OUT_32BIT
+    so_parity = PARITY.ODD
     so_array_dim = 0
     so_delay = 0
     so_array_num = 0
-    si_parity = ece0206.PARITY.ODD
+    si_parity = PARITY.ODD
 
     dev.set_short_mode()
 
-    for si_ch_num in range(1, ece0206.SI_CHS_NUM+1):
+    for si_ch_num in range(1, SI_CHS_NUM+1):
         print('Channel # ', si_ch_num);
 
-        for si_mode in list(ece0206.MODE):
+        for si_mode in list(MODE):
             print_si_mode(si_mode)
 
-            for so_freq in list(ece0206.SO_FREQ):
+            for so_freq in list(SO_FREQ):
                 si_freq = get_si_frequency(so_freq)
                 print_frequency(si_freq, so_freq)
 
-                for si_ch_num_1 in range(1, ece0206.SI_CHS_NUM+1):
+                for si_ch_num_1 in range(1, SI_CHS_NUM+1):
                     dev.si_start(si_ch_num_1, si_freq, si_mode, si_parity)
                     time.sleep(0.1)
                     dev.clear_si_array(si_ch_num_1)
@@ -60,13 +60,13 @@ def test_si(dev:ece0206.Device) -> bool:
 
                 if not test_input_params(dev, si_ch_num, RAM_LEN, params):
                     dev.so_stop()
-                    for ch in range(1, ece0206.SI_CHS_NUM+1):
+                    for ch in range(1, SI_CHS_NUM+1):
                         dev.si_stop(ch)
 
                     return False
 
                 dev.so_stop()
-                for ch in range(1, ece0206.SI_CHS_NUM+1):
+                for ch in range(1, SI_CHS_NUM+1):
                     dev.si_stop(ch)
 
     return True

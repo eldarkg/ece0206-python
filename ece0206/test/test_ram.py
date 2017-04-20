@@ -17,12 +17,11 @@
 Test RAM
 '''
 
-import __init__ as ece0206
+from ..device import *
+from .common import *
 
-from test.common import *
 
-
-_RAM_LEN        = ece0206.ADDR_RANGE[1] + 1
+_RAM_LEN        = ADDR_RANGE[1] + 1
 _TEST_VALUE_0   = 0x55555555
 _TEST_VALUE_1   = 0xAAAAAAAA
 
@@ -50,7 +49,7 @@ def _print_error(cycle, addr, ram_param, templ_param):
                                                        ram_param, templ_param))
 
 
-def _test_ram_cycle(dev:ece0206.Device, cycle:int) -> bool:
+def _test_ram_cycle(dev:Device, cycle:int) -> bool:
     param = list()
 
     for i in range(_RAM_LEN):
@@ -69,7 +68,7 @@ def _test_ram_cycle(dev:ece0206.Device, cycle:int) -> bool:
     return True
 
 
-def test_ram(dev:ece0206.Device) -> bool:
+def test_ram(dev:Device) -> bool:
     if not _test_ram_cycle(dev, 1):
         return False
 
