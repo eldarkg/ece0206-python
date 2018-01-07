@@ -297,8 +297,6 @@ class Device:
         Find and lock usb device.
         On errors raise exceptions.
         '''
-        self._log = log.Logger()
-        self._log.open('ece0206-log.txt')
         self._debug = 0
 
         self._init_usb_device()
@@ -324,9 +322,17 @@ class Device:
         if self._usb_ctx:
             self._usb_ctx.close()
 
-        self._log.close()
+        if self._debug:
+            self._log.close()
 
     def set_debug(self, level) -> None:
+        #FIXME
+        if level != 0:
+            self._log = log.Logger()
+            self._log.open('ece0206-log.txt')
+        else:
+            self._log.close()
+
         self._debug = level
 
     ''' Output channel '''
